@@ -5,7 +5,6 @@
   },
   "core": {
     "connectionString": "sqlite://db.sqlite",
-    "graphiql": true,
     "ignore": {
       "versions": true
     }

@@ -7,7 +7,7 @@ declare interface Quote {
     quote: string;
     saidBy: string;
     createdAt?: string | null;
-    movieId?: number | null;
+    movieId: number;
     likes?: number | null;
 }
 
