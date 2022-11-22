@@ -48,7 +48,7 @@ npx platformatic db start
 curl http://127.0.0.1:3042/movies/ --verbose
 ```
 
-## Add movie quotes
+### Add movie quotes
 
 ```sql
 -- Create 002.do.sql in migrations directory
