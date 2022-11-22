@@ -51,8 +51,6 @@ curl http://127.0.0.1:3042/movies/ --verbose
 ## Add movie quotes
 
 ```sql
--- Stop the Platformatic DB server
-
 -- Create 002.do.sql in migrations directory
 
 CREATE TABLE IF NOT EXISTS quotes (
@@ -71,12 +69,15 @@ DROP TABLE quotes;
 ```
 
 ```bash
-# Start the server
-npx platformatic db start
+# Apply migrations
+npx platformatic db migrate
+
+# Restart the server
+touch platformatic.db.json
 
 # Refresh /documentation in the browser
 
-# Nested relationships will be supported in the next version of Platformatic DB
+# Explore nested relationships
 
 # Explore /graphiql
 
@@ -123,8 +124,6 @@ curl http://127.0.0.1:3042/quotes/ --verbose
 ### Add custom functionality
 
 ```sql
--- Stop the Platformatic DB server
-
 -- Create 003.do.sql in migrations directory
 
 ALTER TABLE quotes ADD COLUMN likes INTEGER default 0;
@@ -137,8 +136,11 @@ ALTER TABLE quotes DROP COLUMN quotes;
 ```
 
 ```bash
-# Start the server
-npx platformatic db start
+# Apply migrations
+npx platformatic db migrate
+
+# Restart the server
+touch platformatic.db.json
 
 # Re-fetch GraphQL schema in GraphiQL
 
@@ -210,11 +212,11 @@ app.graphql.defineResolvers({
   Mutation: {
     likeQuote: async (_, { id }) => {
       const { db, sql } = app.platformatic
-  
+
       const result = await db.query(sql`
         UPDATE quotes SET likes = likes + 1 WHERE id=${id} RETURNING likes
       `)
-  
+
       return result[0]?.likes
     }
   }
@@ -233,23 +235,4 @@ mutation likeWizardOfOzQuote {
 # Run the likeWizardOfOzQuote mutation 4 times
 
 # Run the getTopQuotes query
-```
-
-# Notes
-
-```javascript
-// TODO: This isn't working for me
-app.platformatic.addEntityHooks("quote", {
-	find: async (originalFind, options) => {
-		const quotes = await originalFind(options);
-
-		app.log.info("test");
-
-		return quotes.map((quote) => {
-			quote.foo = "bar";
-
-			return quote;
-		});
-	}
-})
 ```
